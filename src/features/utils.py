@@ -26,3 +26,8 @@ def lemmatization(texts, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV']):
         doc = nlp(" ".join(sent))
         texts_out.append([token.lemma_ for token in doc if token.pos_ in allowed_postags])
     return texts_out
+
+def sent_to_words(sentences):
+    for sentence in sentences:
+        # https://radimrehurek.com/gensim/utils.html#gensim.utils.simple_preprocess
+        yield(gensim.utils.simple_preprocess(str(sentence), deacc=True))  # deacc=True elimina la puntuación
