@@ -42,26 +42,26 @@ trigram = gensim.models.Phrases(bigram[data_words])
 bigram_mod = gensim.models.phrases.Phraser(bigram)
 trigram_mod = gensim.models.phrases.Phraser(trigram)
 
-# Eliminar stopwords
-def remove_stopwords(texts):
-    return [[word for word in simple_preprocess(str(doc)) if word not in stop_words] for doc in texts]
-
-# Hacer bigrams
-def make_bigrams(texts):
-    return [bigram_mod[doc] for doc in texts]
-
-# Hacer trigrams
-def make_trigrams(texts):
-    return [trigram_mod[bigram_mod[doc]] for doc in texts]
-
-# Lematización basada en el modelo de POS de Spacy
-def lemmatization(texts, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV']):
-    """https://spacy.io/api/annotation"""
-    texts_out = []
-    for sent in texts:
-        doc = nlp(" ".join(sent))
-        texts_out.append([token.lemma_ for token in doc if token.pos_ in allowed_postags])
-    return texts_out
+# # Eliminar stopwords
+# def remove_stopwords(texts):
+#     return [[word for word in simple_preprocess(str(doc)) if word not in stop_words] for doc in texts]
+#
+# # Hacer bigrams
+# def make_bigrams(texts):
+#     return [bigram_mod[doc] for doc in texts]
+#
+# # Hacer trigrams
+# def make_trigrams(texts):
+#     return [trigram_mod[bigram_mod[doc]] for doc in texts]
+#
+# # Lematización basada en el modelo de POS de Spacy
+# def lemmatization(texts, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV']):
+#     """https://spacy.io/api/annotation"""
+#     texts_out = []
+#     for sent in texts:
+#         doc = nlp(" ".join(sent))
+#         texts_out.append([token.lemma_ for token in doc if token.pos_ in allowed_postags])
+#     return texts_out
 
 # Eliminamos stopwords
 data_words_nostops = remove_stopwords(data_words)
