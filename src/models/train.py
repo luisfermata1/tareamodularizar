@@ -1,28 +1,12 @@
-import re
-import pandas as pd
-from pprint import pprint
 import gensim
 import gensim.corpora as corpora
 from gensim.models import CoherenceModel
 
 from src.features.utils import remove_stopwords, make_bigrams, make_trigrams, lemmatization, sent_to_words
+from src.data.prepare_data import read_data
 
 
-df = pd.read_csv('../../data/raw/reviews.csv')
-
-# Convertir a una lista
-data = df.content.values.tolist()
-pprint(data[:1])
-
-# Eliminar emails
-data = [re.sub(r'\S*@\S*\s?', '', sent) for sent in data]
-
-# Eliminar newlines
-data = [re.sub(r'\s+', ' ', sent) for sent in data]
-
-# Eliminar comillas
-data = [re.sub(r"\'", "", sent) for sent in data]
-
+data = read_data()
 
 data_words = list(sent_to_words(data))
 
@@ -42,10 +26,6 @@ data_words_nostops = remove_stopwords(data_words)
 
 # Formamos bigrams
 data_words_bigrams = make_bigrams(bigram_mod, data_words_nostops)
-
-# python3 -m spacy download en_core_web_lg
-# Inicializamos el modelo 'en_core_web_lg' con las componentes de POS únicamente
-#nlp = spacy.load('en_core_web_lg', disable=['parser', 'ner'])
 
 # Lematizamos preservando únicamente noun, adj, vb, adv
 data_lemmatized = lemmatization(data_words_bigrams, allowed_postags=['NOUN', 'ADJ', 'VERB', 'ADV'])
@@ -79,8 +59,5 @@ coherence_model_lda = CoherenceModel(model=lda_model, texts=data_lemmatized, dic
 coherence_lda = coherence_model_lda.get_coherence()
 print('\nCoherence Score: ', coherence_lda)
 
-# Visualizamos los temas
-#pyLDAvis.enable_notebook()
-#vis = pyLDAvis.gensim.prepare(lda_model, corpus, id2word)
-#vis
+
 
